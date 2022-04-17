@@ -1,0 +1,4 @@
+# !bin/bash
+
+truffle test && \
+echo "OK"

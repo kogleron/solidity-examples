@@ -17,6 +17,10 @@ contract MyFirstContract {
         ready,
         active
     }
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can perform this transaction"); // If not true will cause error.
+        _;
+    }
 
     Person[] public people;
     mapping(uint256 => Person) public mapPeople;
@@ -25,7 +29,10 @@ contract MyFirstContract {
     string public value; // will be stored on blockchain. It has the "storage" type.
     string public constant constValue = "some const"; // can not be modified.
 
+    address owner;
+
     constructor() {
+        owner = msg.sender;
         value = "myValue";
         state = State.waiting;
     }
@@ -38,15 +45,17 @@ contract MyFirstContract {
         state = State.active;
     }
 
+    // Now only the contract owner can add new person
     function addPerson(string memory _firstName, string memory _lastName)
         public
+        onlyOwner
     {
         uint256 newId = getNextPersonId();
         mapPeople[newId] = Person(peopleCount, _firstName, _lastName);
         people.push(mapPeople[newId]);
     }
 
-    function getNextPersonId() internal returns (uint256){
+    function getNextPersonId() internal returns (uint256) {
         peopleCount++;
 
         return peopleCount;
