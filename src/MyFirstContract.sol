@@ -17,7 +17,7 @@ contract MyFirstContract {
         ready,
         active
     }
-˝
+
     Person[] public people;
     mapping(uint256 => Person) public mapPeople;
     uint256 public peopleCount = 0;
@@ -41,8 +41,14 @@ contract MyFirstContract {
     function addPerson(string memory _firstName, string memory _lastName)
         public
     {
+        uint256 newId = getNextPersonId();
+        mapPeople[newId] = Person(peopleCount, _firstName, _lastName);
+        people.push(mapPeople[newId]);
+    }
+
+    function getNextPersonId() internal returns (uint256){
         peopleCount++;
-        mapPeople[peopleCount] = Person(peopleCount, _firstName, _lastName);
-        people.push(mapPeople[peopleCount]);
+
+        return peopleCount;
     }
 }
