@@ -1,4 +1,5 @@
 const MyToken = artifacts.require("MyToken");
+const truffleAssert = require('truffle-assertions');
 
 /*
  * uncomment accounts to access the test accounts made available by the
@@ -34,5 +35,11 @@ contract("MyToken", function (accounts) {
         .sub(gasPrice.mul(gasUsed))
         .toString()
     );
+    truffleAssert.eventEmitted(receipt, "Purchase", purchase => {
+      assert.equal(accounts[1], purchase.buyer, "Purchase.buyer");
+      assert.equal("1", purchase.amount.toString(), "Purchase.amount")
+
+      return true;
+    });
   });
 });
